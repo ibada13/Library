@@ -52,11 +52,14 @@ class BookController extends Controller
             return Response()->json(["error"=>$validator->errors()],422);
         }
         $limit =$request->input('limit',10);
-    
-        $books = Book::orderBy('created_at','desc')
-        ->select('id','title','cover_path')
+        $books = Book::with('authors:id,name')
+        ->orderBy('created_at','desc')
         ->paginate($limit );
-        return Response()->json($books, 200);
+        $booksWithoutLinks = $books->toArray();
+        unset($booksWithoutLinks['links']);
+        
+        
+        return Response()->json($booksWithoutLinks, 200);
     }
 
 
