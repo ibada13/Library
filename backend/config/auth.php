@@ -1,7 +1,9 @@
 <?php
 
-return [
 
+return [
+    
+    'faker_locale' => 'ar_SA',
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults

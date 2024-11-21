@@ -22,9 +22,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html dir="rtl" lang="ar">
       <body
-        className={`${cairo.className} antialiased`}
+        style={{
+          direction:'rtl',
+        }}
+        className={`${cairo.className} antialiased  `}
       >
         {children}
       </body>

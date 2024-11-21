@@ -6,13 +6,16 @@ import { book } from "../extra/def";
 
 const BookCard = ({ book }: { book: book }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
-
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const handleMouseEnter = () => {
     gsap.to(overlayRef.current, {
       opacity: 1, // Slide into view from left
       y: "0",
       duration: 0.5,
       ease: "power2.out",
+    });
+    gsap.to(titleRef.current, {
+      color: "#ff0000",
     });
   };
 
@@ -22,6 +25,9 @@ const BookCard = ({ book }: { book: book }) => {
       y:"-100%",
       duration:1,
       ease: "power2.out",
+    });
+    gsap.to(titleRef.current, {
+      color: '#fff',
     });
   };
 
@@ -39,7 +45,8 @@ const BookCard = ({ book }: { book: book }) => {
         >
           <div>
             {book.authors.map((author, index) => (
-              <Link className="text-red-500" key={`author-${index}`} href={`/author/${author.id}`}><p>{ author.name}</p></Link>
+              <Link className="text-red-500" key={`author-${index}`}
+                href={{pathname: `/author/${author.id}`,}}><p>{author.name}</p></Link>
               
             ))}
           </div>
@@ -48,16 +55,16 @@ const BookCard = ({ book }: { book: book }) => {
         </div>
 
         {/* Card Content */}
-        <Link href={`/book/${book.id}`} passHref className="flex flex-col justify-between items-center h-full p-4">
+        <Link href={{
+          pathname: `/book/${book.id}`,
+          query: {
+            book:JSON.stringify(book),
+          }
+          
+        }} passHref className="flex flex-col justify-between items-center h-full p-4">
                   <RandomImage cover_path={book.cover_path } />
-          {/* <Image
-            src={book.cover_path || '/images/1.jpg'} // Fallback image if no cover_path
-            alt={`Cover of ${book.title}`}
-            width={130}
-            height={140}
-            className="object-cover rounded-lg bg-red-400 flex-grow"
-            /> */}
-          <h4 className="text-center text-xs font-semibold truncate mt-4">{book.title}</h4>
+   
+          <h4 ref={titleRef} id="title" className="text-center text-xs font-semibold truncate mt-4">{book.title}</h4>
         </Link>
       </div>
     </div>
