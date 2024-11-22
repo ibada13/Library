@@ -50,8 +50,8 @@ const BookCard = ({ book }: { book: book }) => {
               
             ))}
           </div>
-          <div><p className="text-xs">{book.description?book.description.length>50?book.description.substring(0,50)+"...":book.description:"No description available"}</p></div>
-          <div className="flex space-x-4"><p>{book.current_page_number}</p><p className="text-red-500">of</p><p>{book.pages }</p></div>
+          <div><p className="text-xs">{book.description?book.description.length>50?book.description.substring(0,50)+"...":book.description:"الوصف غير متاح"}</p></div>
+          <div className="flex gap-x-4"><p>{book.pages}</p><p className="text-red-500">من</p><p>{book.current_page_number }</p></div>
         </div>
 
         {/* Card Content */}

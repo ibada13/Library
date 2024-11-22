@@ -37,22 +37,27 @@ class BookSeeder extends Seeder
    
 
     
-     private function getRandomImage($folder)
-{
-    $imageDirectory = public_path("images/{$folder}");
-
-    $images = glob($imageDirectory . '/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
-
-    if (!$images) {
-        return null; 
+    private function getRandomImage($folder)
+    {
+        // Get the absolute path to the image folder
+        $imageDirectory = public_path("images/{$folder}");
+    
+        // Get all image files in the directory with the specified extensions
+        $images = glob($imageDirectory . '/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
+    
+        // Check if the directory contains any images
+        if (!$images || empty($images)) {
+            return null; 
+        }
+    
+        // Pick a random image from the array
+        $randomImagePath = $images[array_rand($images)];
+    
+        // Use the asset helper to generate the URL
+       
+        return basename($randomImagePath);
     }
-
     
-    $randomImagePath = $images[array_rand($images)];
-    $serverIp = request()->getSchemeAndHttpHost();
-    
-    return $serverIp."/images/{$folder}/". basename($randomImagePath);
-}
 
     public function run(): void
     {

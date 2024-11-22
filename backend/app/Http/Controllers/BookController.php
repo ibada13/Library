@@ -53,8 +53,14 @@ class BookController extends Controller
         }
         $limit =$request->input('limit',10);
         $books = Book::with('authors:id,name')
+        ->with('types:id,name')
         ->orderBy('created_at','desc')
         ->paginate($limit );
+        $books->each(function ($book)  {
+            if ($book->cover_path) {
+                $book->cover_path =  asset('/images/books/') .'/'. $book->cover_path;
+            }
+        });
         $booksWithoutLinks = $books->toArray();
         unset($booksWithoutLinks['links']);
         

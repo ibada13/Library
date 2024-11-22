@@ -1,4 +1,19 @@
-export interface book {
+export interface data {
+    current_page:number ,
+    data:book[],
+    first_page_url: string,
+    from: number,
+    last_page: number,
+    last_page_url:string,
+    next_page_url:string,
+    path:string,
+    per_page: number,
+    prev_page_url: null | string,
+    to: number,
+    total:number
+
+ }
+export interface book { 
     id: number, 
     title: string
     cover_path: string | null,
@@ -9,16 +24,25 @@ export interface book {
     updated_at:string , 
     pages:number,
     current_page_number:number,
-    authors :author[]
- }
-
+    authors: author[]
+    types:type[]
+}
 export interface author {
     id: number,
     name: string,
     pivot:book_author ,
 }
  
+export interface type {
+    id: number,
+    name: string,
+    pivot:book_type ,
+}
 export interface book_author { 
     book_id: number,
     author_id:number
+}
+export interface book_type { 
+    book_id: number,
+    type_id:number
 }

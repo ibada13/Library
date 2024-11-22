@@ -18,11 +18,11 @@ const Book = () => {
     if (!book) return <div>No book found.</div>;
   
     return (
-        <div className="flex justify-around items-center min-h-screen p-6">
-            <div className="w-1/4 bg-red-500 h-1/2 border rounded-md self-start ">
+        <div className="flex flex-col space-y-6 md:flex-row justify-center md:justify-around items-center min-h-screen p-6">
+            <div className="w-1/4  bg-red-500 h-1/2 border rounded-md self-center ">
                 <RandomImage width={300} height={200} cover_path={book.cover_path}/>
             </div>
-            <div className="w-2/3 flex flex-col justify-around items-center min-h-screen space-y-12">
+            <div className="md:w-2/3 w-full flex flex-col justify-around items-center min-h-screen space-y-12">
                 <p className="text-5xl text-red-500">{book.title}</p>
                 <div className=" flex gap-x-3 font-bold w-full">
                     <p  className="whitespace-pre-wrap">المؤلفون   :</p>
