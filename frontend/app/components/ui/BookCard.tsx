@@ -3,13 +3,13 @@ import Link from "next/link";
 import { gsap } from "gsap";
 import RandomImage from "./randomimage";
 import { book } from "../extra/def";
-
+import TypeIcon from "./TypeIcon";
 const BookCard = ({ book }: { book: book }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const handleMouseEnter = () => {
     gsap.to(overlayRef.current, {
-      opacity: 1, // Slide into view from left
+      opacity: 1,
       y: "0",
       duration: 0.5,
       ease: "power2.out",
@@ -38,7 +38,7 @@ const BookCard = ({ book }: { book: book }) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Overlay */}
+        
         <div
           ref={overlayRef}
           className="absolute flex flex-col justify-between items-center  top-0 left-0 opacity-0 w-full h-3/4 p-3 backdrop-blur-md text-white"
@@ -50,11 +50,22 @@ const BookCard = ({ book }: { book: book }) => {
               
             ))}
           </div>
+          <div className="flex gap-x-3 ">
+            {book.types.map((type, index) => (
+              <Link className="hover:text-red-500 transition-colors duration-300" key={`type-${index}`} href={`type/${type.id}`}>
+                
+
+                <TypeIcon typekey={type.name} />
+              
+                
+              </Link>
+            ))}
+          </div>
           <div><p className="text-xs">{book.description?book.description.length>50?book.description.substring(0,50)+"...":book.description:"الوصف غير متاح"}</p></div>
-          <div className="flex gap-x-4"><p>{book.pages}</p><p className="text-red-500">من</p><p>{book.current_page_number }</p></div>
+          <div className="flex gap-x-4"><p>{book.current_page_number}</p><p className="text-red-500">من</p><p>{book.pages }</p></div>
         </div>
 
-        {/* Card Content */}
+        
         <Link href={{
           pathname: `/book/${book.id}`,
           query: {

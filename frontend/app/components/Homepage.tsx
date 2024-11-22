@@ -1,27 +1,52 @@
 'use client';
-import Book from "./ui/book";
+import Book from "./ui/BookCard";
 import { useEffect, useState } from "react";
 import {fetch_books} from './utils/api'
-import { book ,data} from "./extra/def";
+import { book, data } from "./extra/def";
+import { GiSurprisedSkull } from "react-icons/gi";
 export const Homepage = () => { 
     const [page, Setpage] = useState<number>(1);
     const [books, SetBooks] = useState<book[]>([]);
-    const [data , Setdata]=useState<data>()
+    const [data, Setdata] = useState<data>()
+    const [error, SetError] = useState<boolean>(false);
+    const [loading, SetLoading] = useState<boolean>(false);
+
     useEffect( () => { 
         const get_books = async() => { 
-
+            SetLoading(true);
             try {
                 
-                const fetcheddata:data = await fetch_books(`http://localhost:8000/api/books?page=${page}`);
+                const fetcheddata: data = await fetch_books(`http://localhost:8000/api/books?page=${page}`);
                 Setdata(fetcheddata);
                 SetBooks(fetcheddata.data);
-            } catch (error) { 
-                console.log(error)
+            } catch (error) {
+                console.log(error);
+                SetError(true)
+            } finally { 
+                SetLoading(false);
             }
         }
         get_books();
     },[page])
 
+    if (error) { 
+        return (
+            <div className="flex justify-center gap-y-10 flex-col min-h-screen  items-center text-red-500 text-4xl ">
+                <div className="flex gap-x-1 items-center whitespace-pre-wrap">
+
+                    يوجد خطأ  |  <GiSurprisedSkull   className="text-6xl"/>
+                </div>
+                <p className="text-gray-300 text-sm uppercase ">check the log for more infos</p>
+            </div>
+        )
+    }
+    if (loading) {
+        return (
+            <div className="flex min-h-screen justify-center items-center text-red-500 text-4xl ">
+                    يتم تحميل الكتب ....
+            </div>
+        )
+    }
     return (
         <div className="w-[90%]  flex flex-col justify-center items-center space-y-6">
             

@@ -46,3 +46,6 @@ export interface book_type {
     book_id: number,
     type_id:number
 }
+
+
+export interface type_icon {[key:string]:JSX.Element }

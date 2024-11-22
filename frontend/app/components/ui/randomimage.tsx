@@ -4,7 +4,6 @@ const RandomImage = ({ cover_path , width , height}: {cover_path:null|string , w
     const [randompic, Setrandompic] = useState<number>(1);
     useEffect(() => {
         const randomPage = Math.floor(Math.random() * 2) + 1; 
-        console.log(randomPage)
         Setrandompic(randomPage)
      },[])
 
