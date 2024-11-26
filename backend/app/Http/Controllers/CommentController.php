@@ -33,8 +33,24 @@ class CommentController extends Controller
             ],201
         );
     }
-    public function getcommentforbook($id){
-    
+    public function getcommentsforbook(Request $request){
+        // dd();
+        $validator = Validator::make($request->all(),[
+            "book_id"=>"required|integer|exists:books,id"
+        ]);
+        if($validator->fails()){
+            return response()->json(
+                ["erorr"=>$validator->error(),],422
+            );
+        }
+    $book_id = $request->input("book_id");
+    $comments = Comment::where("book_id" , $book_id)
+    ->paginate(1);
+    $commentwithoutlinks  = $comments->toArray();
+    unset($commentwithoutlinks["links"]);
+    return response()->json([
+        $commentwithoutlinks    
+    ]);
     }
     public function deletecomment(Request $request){
         $rules = [

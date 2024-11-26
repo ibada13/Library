@@ -24,3 +24,5 @@ Route::post('book',[BookController::class  ,'postbook']);
 Route::delete('comment' , [CommentController::class , 'deletecomment']);
 
 Route::post('comment' , [CommentController::class , 'postcomment']);
+
+Route::get('comment' , [CommentController::class , 'getcommentsforbook']);

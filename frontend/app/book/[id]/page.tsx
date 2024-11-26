@@ -1,12 +1,23 @@
 'use client';
 import { useSearchParams } from "next/navigation";
-import { book } from "@/app/components/extra/def";
+import { book, comment_data } from "@/app/components/extra/def";
 import RandomImage from "@/app/components/ui/randomimage";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { commentype } from "@/app/components/extra/def";
+import { fetch_comments } from "@/app/components/utils/api";
+import Comment from "@/app/components/ui/Comment";
+import { BsArrowDownCircle } from "react-icons/bs";
+import useSWR from "swr";
 const Book = () => { 
 
     const searchParams = useSearchParams();
+    const [comments, Setcomments] = useState<commentype[]>([]);
+    const [loadingcomments , SetLoadingComments  ]=useState<boolean>(false)
+    const [commentpage, SetCommentPage] = useState<number>(0);
+    // const [data, Setdata] = useState<comment_data>();
     const stringbook = searchParams.get("book");
+    
     if (!stringbook) { 
         return (
             <div>
@@ -16,8 +27,34 @@ const Book = () => {
     }
     const book = JSON.parse(stringbook as string) as book;
     if (!book) return <div>No book found.</div>;
-  
+    
+    function laodmorecomments() {
+        SetCommentPage(pagenb => pagenb + 1);
+        SetLoadingComments(true);
+    }
+    const [disabled, Setdisabled] = useState<boolean>(book.comments);
+    const { data, error, isLoading:loading } = useSWR<comment_data[]>(
+        book.id && commentpage&&loadingcomments
+        ? `http://127.0.0.1:8000/api/comment?book_id=${book.id}&page=${commentpage}`
+        : null,
+         fetch_comments,
+         {
+             onSuccess: (data) => {
+                //  console.log(data)
+                     if(data) { 
+                        Setcomments((prev)=>[...prev,...data[0].data]);
+                    }
+                 SetLoadingComments(false);
+                 Setdisabled(book.comments && (data?.[0]?.next_page_url !== null));
+                 console.log(disabled ,data[0].next_page_url , book.comments)
+                }
+            }
+            
+        );
+
     return (
+        <div className="flex flex-col  justify-around">
+
         <div className="flex flex-col space-y-6 md:flex-row justify-center md:justify-around items-center min-h-screen p-6">
             <div className="w-1/4  bg-red-500 h-1/2 border rounded-md self-center ">
                 <RandomImage width={300} height={200} cover_path={book.cover_path}/>
@@ -45,7 +82,14 @@ const Book = () => {
                 <div></div>
                 <div></div>
             </div>
-        </div>
+            </div>
+            
+            {comments.map((comment:commentype, index:number) => (
+                
+                <Comment key={`comment-${index}`} comment={comment}/>
+            ))}
+            <button disabled={!disabled} className="flex justify-center items-center text-6xl text-red-500 disabled:text-white disabled:opacity-50" onClick={laodmorecomments}><BsArrowDownCircle /></button>
+            </div>
     );
 }
 

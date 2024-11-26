@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\Comment;
 use App\Http\Requests\GetBookRequest;
 use App\Models\Author;
+use App\Models\Type;
 
 class BookController extends Controller
 {
@@ -22,7 +23,7 @@ class BookController extends Controller
         $comments= Comment::where('book_id',$book->id)
         ->orderBy('created_at','desc')
         ->paginate(3)
-        ->withQueryString()
+        ->withQueryString() 
         ;
         // dd($comments);
         return response()->json([
@@ -53,10 +54,15 @@ class BookController extends Controller
         }
         $limit =$request->input('limit',10);
         $books = Book::with('authors:id,name')
+        ->withCount('comments')
         ->with('types:id,name')
         ->orderBy('created_at','desc')
         ->paginate($limit );
         $books->each(function ($book)  {
+
+            
+                $book['comments'] = $book->comments_count > 0;
+
             if ($book->cover_path) {
                 $book->cover_path =  asset('/images/books/') .'/'. $book->cover_path;
             }
@@ -135,6 +141,21 @@ class BookController extends Controller
             "message"=>"book was created sucessfully.",
             "book"=>$book,
         ],201);
+    }
+
+
+
+    public function get_books_from_type_id(Request $request){
+        $validator = Validator::make($request->all( ),[
+            "type_id"=>"integer|required|min:1|exists:types,id"
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                "error"=>$validator->errors(),
+            ],422);
+        }
+        $type_id = $request->input('type_id');
+        $type = Type::with('books')->find($type_id);
     }
 }
 
